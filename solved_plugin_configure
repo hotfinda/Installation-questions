@@ -1,0 +1,49 @@
+1.ROS
+step1:
+$ source /opt/ros/kinetic/setup.bash
+$ mkdir -p ~/catkin_ws/src
+$ cd ~/catkin_ws/
+$ catkin_make
+$ source devel/setup.bash
+$ echo $ROS_PACKAGE_PATH
+step2:
+$ cd ~/catkin_ws/src/ #use your current catkin folder
+$ git clone https://github.com/stereolabs/zed-ros-wrapper.git
+$ cd ..
+$ catkin_make -DCMAKE_BUILD_TYPE=Release
+$ echo source $(pwd)/devel/setup.bash >> ~/.bashrc
+$ source ~/.bashrc
+step3:
+$ roslaunch zed_wrapper zed.launch
+
+2.Opencv
+step1:after running ROS, cannot run Opencv,using following method：
+
+Because of the effect from ROS，ROS will add the following path to python ：
+
+'/opt/ros/kinetic/lib/python2.7/dist-packages'
+
+to solve this problem，in any python files you need to run（file that needs to use import cv2），add folloing codes：
+
+import sys
+sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
+
+through this two line codes, we erase the python path，so we can import cv2
+step2:
+open the terminal in the place where you put your zed-opencv.py file
+python3 zed-opencv.py /home/hotfinda/document/ZED/3.svo
+3.Tensorflow
+1）before using tensorflow，run the following command everytime
+)**# From tensorflow/models/research/**
+export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+2）jump to ~/tensorflow/models/research, run the following code to check if the environment configuration is successful
+python object_detection/builders/model_builder_test.py
+3）read this link before carrying more steps：
+https://github.com/stereolabs/zed-python-api
+you may find a problem about pathlib,try using the following link
+https://github.com/nvbn/thefuck/issues/287
+if you find a problem about"pyzed persion denied"：using sudo before you write command
+4）if the environment configuration is successful, jump to /home/hotfinda/tensorflow/zed-tensorflow-master, you will finish the obstacles detection：
+$ python /home/hotfinda/tensorflow/zed-tensorflow-master/object_detection_zed.py
+
+
